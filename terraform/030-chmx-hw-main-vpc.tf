@@ -61,11 +61,12 @@ resource "aws_eip" "nat" {
 resource "aws_nat_gateway" "chmx-hw-main-nat" {
   count         = length(var.private_subnet)
   allocation_id = element(aws_eip.nat.*.id, count.index)
-  subnet_id     = element(aws_subnet.chmx-hw-main-snet-priv.*.id, count.index)
+  subnet_id     = element(aws_subnet.chmx-hw-main-snet-pub.*.id, count.index)
 }
 
 resource "aws_vpc_endpoint" "chmx-hw-main-vpc-s3" {
   vpc_id            = aws_vpc.chmx-hw-main-vpc-001.id
   vpc_endpoint_type = "Gateway"
   service_name      = "com.amazonaws.eu-west-2.s3"
+  route_table_ids   = concat(aws_route_table.PubToExt.*.id, aws_route_table.PrivToNat.*.id)
 }
