@@ -1,5 +1,5 @@
 resource "aws_vpc" "chmx-hw-main-vpc-001" {
-  cidr_block       = "172.16.0.0/16"
+  cidr_block       = var.main_cidr
   instance_tenancy = "default"
 
   tags = {
@@ -59,7 +59,7 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "chmx-hw-main-nat" {
-  count         = length(var.private_subnet)
+  count         = length(var.public_subnet)
   allocation_id = element(aws_eip.nat.*.id, count.index)
   subnet_id     = element(aws_subnet.chmx-hw-main-snet-pub.*.id, count.index)
 }
