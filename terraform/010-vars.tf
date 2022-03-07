@@ -2,10 +2,6 @@ variable "AWS_REGION" {
   default = "eu-west-2"
 }
 
-variable "main_cidr" {
-  default = "172.16.0.0/16"
-}
-
 variable "private_subnet" {
   type    = list(string)
   default = ["172.16.1.0/24", "172.16.2.0/24"]
