@@ -54,12 +54,12 @@ resource "aws_route_table_association" "PrivRouteassociation" {
 
 }
 resource "aws_eip" "nat" {
-  count = length(var.private_subnet)
+  count = length(var.public_subnet)
   vpc   = true
 }
 
 resource "aws_nat_gateway" "chmx-hw-main-nat" {
-  count         = length(var.private_subnet)
+  count         = length(var.public_subnet)
   allocation_id = element(aws_eip.nat.*.id, count.index)
   subnet_id     = element(aws_subnet.chmx-hw-main-snet-pub.*.id, count.index)
 }
