@@ -67,7 +67,7 @@ resource "aws_instance" "chmx-szmeier" {
         sleep 5; 
     done
     docker pull public.ecr.aws/f4k7i4s0/chmx-szmeier:latest
-    docker run -p 80:5000 -d public.ecr.aws/f4k7i4s0/chmx-szmeier:latest > /var/log/clockapp.log
+    docker run -p 80:5000 -e TZ=Europe/Budapest -d public.ecr.aws/f4k7i4s0/chmx-szmeier:latest > /var/log/clockapp.log
   EOF
 
 }
