@@ -53,13 +53,37 @@ resource "aws_route_table_association" "PrivRouteassociation" {
   route_table_id = element(aws_route_table.PrivToNat.*.id, count.index)
 
 }
+
+resource "aws_security_group" "default" {
+  vpc_id = "aws_vpc.chmx-hw-main-vpc-001.id"
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_eip" "nat" {
-  count = length(var.private_subnet)
+  count = length(var.public_subnet)
   vpc   = true
 }
 
 resource "aws_nat_gateway" "chmx-hw-main-nat" {
-  count         = length(var.private_subnet)
+  count         = length(var.public_subnet)
   allocation_id = element(aws_eip.nat.*.id, count.index)
   subnet_id     = element(aws_subnet.chmx-hw-main-snet-pub.*.id, count.index)
 }
