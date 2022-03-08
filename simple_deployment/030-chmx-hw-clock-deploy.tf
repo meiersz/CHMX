@@ -57,17 +57,17 @@ resource "aws_instance" "chmx-szmeier" {
   user_data = <<-EOF
     #!/bin/bash
     set -ex
-    sudo yum update -y
-    sudo amazon-linux-extras install docker -y
-    sudo usermod -a -G docker ec2-user
-    sudo systemctl enable docker 
-    sudo systemctl start docker 
+    yum update -y
+    amazon-linux-extras install docker -y
+    usermod -a -G docker ec2-user
+    systemctl enable docker 
+    systemctl start docker 
     until sudo docker images 2&> /dev/null; do  
         echo "Waiting for docker to start..." > /var/log/userdata.log;
         sleep 5; 
     done
-    sudo docker pull public.ecr.aws/f4k7i4s0/chmx-szmeier:latest
-    sudo docker run public.ecr.aws/f4k7i4s0/chmx-szmeier:latest > /var/log/clockapp.log
+    docker pull public.ecr.aws/f4k7i4s0/chmx-szmeier:latest
+    docker run -p 80:5000 -d public.ecr.aws/f4k7i4s0/chmx-szmeier:latest > /var/log/clockapp.log
   EOF
 
 }
